@@ -18,7 +18,6 @@ public class UserController {
 	@Resource(name = "userService")
 	private IUserService userService;
 	private int psize = 5;
-	// @Qualifier(value = "userBean")
 
 	/**
 	 * 测试
