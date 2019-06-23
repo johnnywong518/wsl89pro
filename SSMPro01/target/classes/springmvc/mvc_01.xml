@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+      http://www.springframework.org/schema/beans/spring-beans.xsd  
+      http://www.springframework.org/schema/context  
+      http://www.springframework.org/schema/context/spring-context-4.2.xsd  
+      http://www.springframework.org/schema/mvc  
+      http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+	<!-- HandlAdapter处理器开发 -->
+	<!-- 配置Handler -->
+	<bean id="fdemoc" name="/ceshi.action"
+		class="com.yt.smvc.controller.MyMvcController"></bean>
+
+	<bean id="fcontroller2" name="/ceshi_02.action"
+		class="com.yt.smvc.controller.MyMvcController02"></bean>
+
+	<!-- beanName Url映射器 -->
+	<bean
+		class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
+	<!-- 简单url映射 -->
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/ceshi1.action">fdemoc</prop>
+				<prop key="/ceshi2.action">fdemoc</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

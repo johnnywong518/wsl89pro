@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd  
+      http://www.springframework.org/schema/context  
+      http://www.springframework.org/schema/context/spring-context.xsd  
+      http://www.springframework.org/schema/mvc
+      http://www.springframework.org/schema/mvc/spring-mvc.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<!-- 加载属性文件 -->
+	<context:property-placeholder
+		location="classpath:db.properties" />
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<!-- c3p0配置 <property name="driverClass" value="${jdbc.driverClass}"></property> 
+			<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property> <property name="user" 
+			value="${jdbc.user}"></property> <property name="password" value="${jdbc.password}"></property> -->
+		<property name="driverClassName" value="${jdbc.driverClass}" />
+		<property name="url" value="${jdbc.jdbcUrl}" />
+		<property name="username" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxActive" value="30" />
+		<property name="maxIdle" value="5" />
+	</bean>
+	<!-- 配置SqlSessionFactoryBean，目的：加载mybaits配置文件和映射文件，即替代原Mybatis工具类的作用 -->
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation"
+			value="classpath:mybatis/mybatis.xml" />
+	</bean>
+	<!-- 配置Mybatis的事务管理器，即因为Mybatis底层用的是JDBC事务管事器，所以在这里依然配置JDBC事务管理器 -->
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- mapper扫描器 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 扫描包路径，如果需要扫描多个包，中间使用半角逗号隔开 -->
+		<property name="basePackage" value="com.yt.smvc.mapper"></property>
+		<property name="sqlSessionFactoryBeanName"
+			value="sqlSessionFactory" />
+	</bean>
+	<!-- 注解方式管理事务 -->
+	<!-- 1、开启注解驱动 2、在service类上或者方法上使用注解@Transactional -->
+	<tx:annotation-driven
+		transaction-manager="transactionManager" />
+</beans>
